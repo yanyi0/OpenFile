@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,UIDocumentInteractionControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
-
+@property (nonatomic,strong) UIDocumentInteractionController *documentVC;
+@property(nonatomic,copy)NSString *filePath;
 @end
 

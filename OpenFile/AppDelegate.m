@@ -7,7 +7,9 @@
 //
 
 #import "AppDelegate.h"
-
+#import "SaveFileManager.h"
+#import "ViewController.h"
+#import "NSString+Regex.h"
 @interface AppDelegate ()
 
 @end
@@ -46,6 +48,25 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
-
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+    if (url != nil)
+    {
+        NSString *path = [url absoluteString];
+        path = [path URLDecodedString:path];
+        NSMutableString *string = [[NSMutableString alloc] initWithString:path];
+        if ([path hasPrefix:@"file://"])
+        {
+            [string replaceOccurrencesOfString:@"file://"withString:@""options:NSCaseInsensitiveSearch range:NSMakeRange(0, string.length)];//这儿是个坑,不能用下面语句代替
+//            [string  stringByReplacingOccurrencesOfString:@"file://" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, string.length)];
+            [SaveFileManager sharedInstance].filePath = string;
+            NSLog(@"存起来的路径:%@",string);
+            ViewController *vc = self.window.rootViewController;
+            [vc openFile];
+        }
+    }
+    return YES;
+}
 @end
